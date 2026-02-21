@@ -22,6 +22,11 @@ RUN --mount=type=secret,id=github_token,required=false \
     "https://github.com/languagetool-org/languagetool/commit/0045f6f6f0935a04a2c79d71bc0019f455b65c9b.patch" \
     | git apply
 
+# Re-enable confusion pairs disabled in v6.4 for premium differentiation (there/their, etc.)
+# The aids/aides pair is excluded as it would false-positive on "AIDS" (case-insensitive matching)
+RUN sed -i -e 's/^#\([a-z]\)/\1/' -e 's/^aids;aides/#&/' \
+    languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/confusion_sets.txt
+
 # v6.7 ships logback 1.5.21 which has known CVEs - remove when v6.8 lands
 RUN xml edit --inplace --update "//*[name()='ch.qos.logback.version']" --value "${LOGBACK_VERSION}" pom.xml
 
