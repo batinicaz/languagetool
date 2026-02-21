@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.4](https://github.com/batinicaz/languagetool/compare/v1.1.3...v1.1.4) (2026-02-21)
+
+
+### Bug Fixes
+
+* missing confusion pairs + fasttext not being used ([#5](https://github.com/batinicaz/languagetool/issues/5)) ([4745ab8](https://github.com/batinicaz/languagetool/commit/4745ab8a140b42a0eb8b25b5c61e09e1193f1beb))
+
 ### [1.1.3](https://github.com/batinicaz/languagetool/compare/v1.1.2...v1.1.3) (2026-02-21)
 
 
