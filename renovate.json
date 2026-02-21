@@ -1,0 +1,30 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "matchManagers": ["dockerfile"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": true
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": ["ARG LT_VERSION=(?<currentValue>\\d+\\.\\d+)\\n"],
+      "depNameTemplate": "languagetool-org/languagetool",
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "loose",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": ["ARG MAVEN_VERSION=(?<currentValue>[\\d.]+)\\n"],
+      "depNameTemplate": "apache/maven",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^maven-(?<version>.+)$"
+    }
+  ]
+}

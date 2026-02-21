@@ -1,16 +1,15 @@
-name: Build
+name: Build & Publish
 on:
   push:
-    branches: ["**", "!main"]
+    tags: ["v*"]
 permissions:
   contents: read
   packages: write
   security-events: write
 jobs:
-  build:
+  publish:
     uses: batinicaz/gha/.github/workflows/docker.yml@7a20ab87b0c583119a9133fae8353a80b6e2422d # ratchet:batinicaz/gha/.github/workflows/docker.yml@v1.5.0
     with:
       runner: ubuntu-24.04-arm
-      push: false
     secrets:
       GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
