@@ -1,22 +1,12 @@
-name: Build & Publish
+name: Release
 on:
   push:
-    branches:
-      - "main"
-  schedule:
-    - cron: 0 2 * * *
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ghcr.io/${{ github.repository }}
+    branches: ["main"]
+permissions:
+  contents: write
 jobs:
-  BuildAndPush:
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      security-events: write
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
-      - uses: ./.github/actions/docker
-        with:
-          push: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+  release:
+    uses: batinicaz/gha/.github/workflows/release.yml@7a20ab87b0c583119a9133fae8353a80b6e2422d # ratchet:batinicaz/gha/.github/workflows/release.yml@v1.5.0
+    secrets:
+      APP_ID: ${{ secrets.APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
