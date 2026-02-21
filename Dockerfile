@@ -37,33 +37,20 @@ RUN cd languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs \
       wget -q "https://repo1.maven.org/maven2/io/netty/${module}/${NETTY_VERSION}/${module}-${NETTY_VERSION}.jar"; \
     done
 
-RUN DEPS=$(jdeps --ignore-missing-deps --print-module-deps --multi-release 21 \
-    --recursive \
-    --class-path="languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs/*" \
-    --module-path="languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs/*" \
-    languagetool-standalone/target/LanguageTool-*/LanguageTool-*/languagetool-server.jar 2>/dev/null || echo "java.base") \
-    && jlink --add-modules "${DEPS},jdk.crypto.ec,jdk.localedata" \
-    --strip-debug --no-man-pages --no-header-files \
-    --compress=zip-6 --output /opt/jre
-
 RUN mkdir -p /opt/fasttext \
     && wget -q "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin" -O /opt/fasttext/lid.176.bin
 
-FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
+FROM eclipse-temurin:21-jre-alpine@sha256:6ad8ed080d9be96b61438ec3ce99388e294af216ed57356000c06070e85c5d5d
 
-RUN apk add --no-cache libstdc++ fasttext \
+RUN apk add --no-cache fasttext \
     && addgroup -g 783 -S languagetool \
     && adduser -u 783 -S -G languagetool -h /opt/languagetool languagetool \
     && mkdir -p /ngrams /tmp \
     && chown 783:783 /ngrams /tmp
 
-COPY --from=builder --chown=783:783 /opt/jre /opt/jre
 COPY --from=builder --chown=783:783 /opt/fasttext/lid.176.bin /opt/languagetool/fasttext/lid.176.bin
 COPY --from=builder --chown=783:783 /build/languagetool-standalone/target/LanguageTool-*/LanguageTool-*/ /opt/languagetool/
 COPY --chown=783:783 entrypoint.sh /opt/languagetool/entrypoint.sh
-
-ENV JAVA_HOME=/opt/jre
-ENV PATH="/opt/jre/bin:${PATH}"
 
 USER 783:783
 WORKDIR /opt/languagetool
