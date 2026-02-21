@@ -1,0 +1,92 @@
+name: Docker
+description: Builds a docker image and optionally push it
+author: batinicaz
+inputs:
+  image_name:
+    description: The name of the image being built
+    default: ghcr.io/${{ github.repository }}
+    required: false
+  image_tag:
+    description: The tag of the image being built
+    default: latest
+    required: false
+  registry:
+    description: The container registry that will be used for image pushing
+    default: ghcr.io
+    required: false
+  push:
+    description: Push the image to the container registry?
+    default: 'false'
+    required: false
+  token:
+    description: Token to authenticate with registry. Required if pushing
+    default: ''
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+    - name: Find latest version of terraform
+      id: terraform
+      uses: oprypin/find-latest-tag@dd2729fe78b0bb55523ae2b2a310c6773a652bd1 # ratchet:oprypin/find-latest-tag@v1
+      with:
+        repository: hashicorp/terraform
+        releases-only: true
+    - name: Find latest version of tflint
+      id: tflint
+      uses: oprypin/find-latest-tag@dd2729fe78b0bb55523ae2b2a310c6773a652bd1 # ratchet:oprypin/find-latest-tag@v1
+      with:
+        repository: terraform-linters/tflint
+        releases-only: true
+    - name: Format terraform version correctly
+      id: strip-v-from-tag
+      run: |
+        TAG=${{ steps.terraform.outputs.tag }}
+        echo "TF_VERSION=${TAG#v}" >> $GITHUB_ENV
+      shell: bash
+    - name: Login to GitHub Container Registry
+      if: ${{ inputs.push }}
+      uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # ratchet:docker/login-action@v2
+      with:
+        registry: ${{ inputs.registry }}
+        username: ${{ github.actor }}
+        password: ${{ inputs.token }}
+    - name: Build image
+      run: |
+        docker build -t ${{ inputs.image_name }}:${{ inputs.image_tag }} \
+        --build-arg TERRAFORM_VERSION=${{ env.TF_VERSION }} \
+        --build-arg TF_LINT_VERSION=${{ steps.tflint.outputs.tag }} \
+        .
+      shell: bash
+    - name: Scan image using Aqua Trivy
+      uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # ratchet:aquasecurity/trivy-action@master
+      if: always()
+      with:
+        image-ref: ${{ inputs.image_name }}:${{ inputs.image_tag }}
+        format: 'sarif'
+        exit-code: 1
+        severity: LOW,MEDIUM,HIGH,CRITICAL
+        output: 'trivy-results.sarif'
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@e2b57b01d64b69ac273abfbea5d3ed15231e1706 # ratchet:github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+    - name: Clone test repo for validating image
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # ratchet:actions/checkout@v4
+      with:
+        repository: batinicaz/oci-core
+        ref: v1.2.9
+        path: test
+    - name: Test image
+      uses: batinicaz/gha/.github/actions/pre-commit@0e6a5f26d67b9afab876ad3d6d7ceefc6e7949b4 # ratchet:batinicaz/gha/.github/actions/pre-commit@v1.2.0
+      with:
+        image: ${{ inputs.image_name }}:${{ inputs.image_tag }}
+        path: "${{ github.workspace}}/test"
+    - name: Push Docker image
+      run: |
+        if [[ "${{ inputs.push }}" == "true" ]]; then
+          docker push ${{ inputs.image_name }}:${{ inputs.image_tag }}
+        else
+          echo 'Push skipped'
+        fi
+      shell: bash
