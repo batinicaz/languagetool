@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk-alpine@sha256:c98f0d2e171c898bf896dc4166815d28a56d428e218190a1f35cdc7d82efd61f AS builder
+FROM eclipse-temurin:25.0.2_10-jdk-alpine@sha256:da683f4f02f9427597d8fa162b73b8222fe08596dcebaf23e4399576ff8b037e AS builder
 
 ARG LT_VERSION=6.7
 ARG MAVEN_VERSION=3.9.12
@@ -45,7 +45,7 @@ RUN cd languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs \
 RUN mkdir -p /opt/fasttext \
     && wget -q "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin" -O /opt/fasttext/lid.176.bin
 
-FROM eclipse-temurin:21-jre-alpine@sha256:6ad8ed080d9be96b61438ec3ce99388e294af216ed57356000c06070e85c5d5d
+FROM eclipse-temurin:25.0.2_10-jre-alpine@sha256:f10d6259d0798c1e12179b6bf3b63cea0d6843f7b09c9f9c9c422c50e44379ec
 
 RUN apk add --no-cache fasttext \
     && addgroup -g 783 -S languagetool \
