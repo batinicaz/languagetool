@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/batinicaz/languagetool/compare/v1.1.1...v1.1.2) (2026-02-21)
+
+
+### Bug Fixes
+
+* use semver in image tags ([#3](https://github.com/batinicaz/languagetool/issues/3)) ([59cf5fc](https://github.com/batinicaz/languagetool/commit/59cf5fcf35a9dd16e0cb8fa969f89c863bdff6e9))
+
 ### [1.1.1](https://github.com/batinicaz/languagetool/compare/v1.1.0...v1.1.1) (2026-02-21)
 
 
