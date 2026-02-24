@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.7](https://github.com/batinicaz/languagetool/compare/v1.1.6...v1.1.7) (2026-02-24)
+
+
+### Bug Fixes
+
+* update packages as part of build ([#11](https://github.com/batinicaz/languagetool/issues/11)) ([c4b69a2](https://github.com/batinicaz/languagetool/commit/c4b69a2a383b04b47b7d9c6748f99fcbbc7e13a5))
+
 ### [1.1.6](https://github.com/batinicaz/languagetool/compare/v1.1.5...v1.1.6) (2026-02-23)
 
 ### [1.1.5](https://github.com/batinicaz/languagetool/compare/v1.1.4...v1.1.5) (2026-02-21)
