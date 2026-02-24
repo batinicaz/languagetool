@@ -47,7 +47,8 @@ RUN mkdir -p /opt/fasttext \
 
 FROM eclipse-temurin:21.0.10_7-jre-alpine@sha256:6ad8ed080d9be96b61438ec3ce99388e294af216ed57356000c06070e85c5d5d
 
-RUN apk add --no-cache fasttext \
+RUN apk upgrade --no-cache \
+    && apk add --no-cache fasttext \
     && addgroup -g 783 -S languagetool \
     && adduser -u 783 -S -G languagetool -h /opt/languagetool languagetool \
     && mkdir -p /ngrams /tmp \
