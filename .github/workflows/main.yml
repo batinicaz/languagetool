@@ -6,7 +6,7 @@ permissions:
   contents: write
 jobs:
   release:
-    uses: batinicaz/gha/.github/workflows/release.yml@4eaeea879113acebe86a05453d88e58ba6d44713 # ratchet:batinicaz/gha/.github/workflows/release.yml@v1.5.3
+    uses: batinicaz/gha/.github/workflows/release.yml@6d150d63ad3b8811a44e6ca3def6070df9b99916 # ratchet:batinicaz/gha/.github/workflows/release.yml@v1.7.2
     secrets:
       APP_ID: ${{ secrets.APP_ID }}
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
