@@ -8,9 +8,13 @@ permissions:
   security-events: write
 jobs:
   build:
-    uses: batinicaz/gha/.github/workflows/docker.yml@04fd71588f6e19a10ea68d1beb5e6faabab7487d # ratchet:batinicaz/gha/.github/workflows/docker.yml@v1.5.3
+    uses: batinicaz/gha/.github/workflows/docker.yml@6d150d63ad3b8811a44e6ca3def6070df9b99916 # ratchet:batinicaz/gha/.github/workflows/docker.yml@v1.7.2
     with:
       runner: ubuntu-24.04-arm
       push: false
+      smoke_test: |
+        docker run -d -p 8010:8010 --name lt-smoke "$IMAGE"
+        ./smoke-test.sh
+        docker stop lt-smoke > /dev/null
     secrets:
       GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
