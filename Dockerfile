@@ -42,6 +42,13 @@ RUN cd languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs \
       wget -q "https://repo1.maven.org/maven2/io/netty/${module}/${NETTY_VERSION}/${module}-${NETTY_VERSION}.jar"; \
     done
 
+# v6.7 ships jackson-core 2.18.0 which has GHSA-72hv-8253-57qq (DoS via async parser) - remove when v6.8 lands
+ARG JACKSON_VERSION=2.18.6
+RUN cd languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs \
+    && rm -f jackson-core.jar jackson-core-*.jar \
+    && wget -q "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/${JACKSON_VERSION}/jackson-core-${JACKSON_VERSION}.jar" \
+       -O jackson-core.jar
+
 RUN mkdir -p /opt/fasttext \
     && wget -q "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin" -O /opt/fasttext/lid.176.bin
 
