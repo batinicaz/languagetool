@@ -23,7 +23,7 @@
       "managerFilePatterns": ["/^Dockerfile$/"],
       "matchStrings": ["ARG MAVEN_VERSION=(?<currentValue>[\\d.]+)\\n"],
       "depNameTemplate": "apache/maven",
-      "datasourceTemplate": "github-tags",
+      "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^maven-(?<version>.+)$"
     }
   ]
