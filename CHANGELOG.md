@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/batinicaz/languagetool/compare/v1.2.1...v1.2.2) (2026-03-10)
+
+
+### Bug Fixes
+
+* renovate data source for maven fetching non released versions ([#19](https://github.com/batinicaz/languagetool/issues/19)) ([d64dd55](https://github.com/batinicaz/languagetool/commit/d64dd55598d7fe38bc861991e8816ae457e39f16))
+
 ### [1.2.1](https://github.com/batinicaz/languagetool/compare/v1.2.0...v1.2.1) (2026-03-06)
 
 ## [1.2.0](https://github.com/batinicaz/languagetool/compare/v1.1.11...v1.2.0) (2026-03-04)
