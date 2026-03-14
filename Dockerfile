@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21.0.10_7-jdk-alpine@sha256:c98f0d2e171c898bf896dc4166815d28a56d428e218190a1f35cdc7d82efd61f AS builder
 
 ARG LT_VERSION=6.7
-ARG MAVEN_VERSION=3.9.13
+ARG MAVEN_VERSION=3.9.14
 ARG LOGBACK_VERSION=1.5.25
 RUN apk add --no-cache curl git patch xmlstarlet
 
