@@ -8,7 +8,7 @@ permissions:
   security-events: write
 jobs:
   publish:
-    uses: batinicaz/gha/.github/workflows/docker.yml@d0e2e58304385e918dc140830023b530b54d79aa # ratchet:batinicaz/gha/.github/workflows/docker.yml@v1.8.1
+    uses: batinicaz/gha/.github/workflows/docker.yml@dbabbc3d5f938c9778cf59c73438717c35ab5988 # ratchet:batinicaz/gha/.github/workflows/docker.yml@v1.8.1
     with:
       runner: ubuntu-24.04-arm
       no_cache_filter: runtime
