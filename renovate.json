@@ -1,13 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "packageRules": [
-    {
-      "matchManagers": ["dockerfile"],
-      "matchUpdateTypes": ["digest"],
-      "automerge": true
-    }
-  ],
+  "extends": ["github>batinicaz/gha:renovate-preset"],
   "customManagers": [
     {
       "customType": "regex",
