@@ -33,7 +33,7 @@ RUN mvn --no-transfer-progress -B package -DskipTests \
 
 # v6.8 ships Netty 4.1.x with multiple DoS CVEs (GHSA-x4gw-5cx5-pgmh, GHSA-cm33-6792-r9fm, etc.)
 # renovate: datasource=maven depName=io.netty:netty-handler
-ARG NETTY_VERSION=4.1.135.Final
+ARG NETTY_VERSION=4.2.15.Final
 RUN cd languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs \
     && rm -f netty-*.jar \
     && for module in netty-buffer netty-codec netty-codec-dns netty-common netty-handler \
