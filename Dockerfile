@@ -3,7 +3,7 @@ FROM eclipse-temurin:21.0.11_10-jdk-alpine@sha256:4fb80de7aeb277ad949cfbe89b4f50
 ARG LT_VERSION=6.8
 ARG MAVEN_VERSION=3.9.16
 # renovate: datasource=maven depName=ch.qos.logback:logback-classic
-ARG LOGBACK_VERSION=1.5.25
+ARG LOGBACK_VERSION=1.5.34
 # renovate: datasource=maven depName=org.apache.opennlp:opennlp-tools
 ARG OPENNLP_VERSION=2.5.9
 RUN apk add --no-cache curl git patch xmlstarlet
