@@ -18,6 +18,14 @@
       "depNameTemplate": "apache/maven",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^maven-(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: versioning=(?<versioning>\\S+))?\\nARG \\w+_VERSION=(?<currentValue>\\S+)\\n"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}maven{{/if}}"
     }
   ]
 }
