@@ -1,8 +1,11 @@
-FROM eclipse-temurin:21.0.10_7-jdk-alpine@sha256:bcc7ec7e8fef937ba9f01ee5f810361d722c6b5dbe19ac188ab7b25c1a4dd2c9 AS builder
+FROM eclipse-temurin:21.0.11_10-jdk-alpine@sha256:4fb80de7aeb277ad949cfbe89b4f504e50bb34c57fd908c5825236473d71e986 AS builder
 
-ARG LT_VERSION=6.7
+ARG LT_VERSION=6.8
 ARG MAVEN_VERSION=3.9.14
+# renovate: datasource=maven depName=ch.qos.logback:logback-classic
 ARG LOGBACK_VERSION=1.5.25
+# renovate: datasource=maven depName=org.apache.opennlp:opennlp-tools
+ARG OPENNLP_VERSION=2.5.9
 RUN apk add --no-cache curl git patch xmlstarlet
 
 RUN wget -q "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -O /tmp/maven.tar.gz \
@@ -14,27 +17,23 @@ ENV PATH="/opt/apache-maven-${MAVEN_VERSION}/bin:${PATH}"
 WORKDIR /build
 RUN git clone --depth 1 --branch v${LT_VERSION} https://github.com/languagetool-org/languagetool.git .
 
-# Fix unbounded memory growth in Hunspell dictionary loading (languagetool-org/languagetool#11380)
-# Merged to master via PR #11692 but not yet included in a release - remove when v6.8 lands
-RUN --mount=type=secret,id=github_token,required=false \
-    curl -fsSL \
-    $(test -f /run/secrets/github_token && echo "-H \"Authorization: Bearer $(cat /run/secrets/github_token)\"") \
-    "https://github.com/languagetool-org/languagetool/commit/0045f6f6f0935a04a2c79d71bc0019f455b65c9b.patch" \
-    | git apply
-
 # Re-enable confusion pairs disabled in v6.4 for premium differentiation (there/their, etc.)
 # The aids/aides pair is excluded as it would false-positive on "AIDS" (case-insensitive matching)
 RUN sed -i -e 's/^#\([a-z]\)/\1/' -e 's/^aids;aides/#&/' \
     languagetool-language-modules/en/src/main/resources/org/languagetool/resource/en/confusion_sets.txt
 
-# v6.7 ships logback 1.5.21 which has known CVEs - remove when v6.8 lands
+# v6.8 ships logback 1.5.21 which has known CVEs
 RUN xml edit --inplace --update "//*[name()='ch.qos.logback.version']" --value "${LOGBACK_VERSION}" pom.xml
+
+# v6.8 ships opennlp-tools 1.9.4 which has GHSA-cx4m-2p55-rw7j and GHSA-4v8g-86x5-3vrc (Critical)
+RUN xml edit --inplace --update "//*[name()='org.apache.opennlp.opennlp-tools.version']" --value "${OPENNLP_VERSION}" pom.xml
 
 RUN mvn --no-transfer-progress -B package -DskipTests \
     --projects languagetool-standalone --also-make
 
-# v6.7 ships Netty 4.1.118 which has CVE-2025-58057 (DoS via BrotliDecoder) - remove when v6.8 lands
-ARG NETTY_VERSION=4.1.127.Final
+# v6.8 ships Netty 4.1.x with multiple DoS CVEs (GHSA-x4gw-5cx5-pgmh, GHSA-cm33-6792-r9fm, etc.)
+# renovate: datasource=maven depName=io.netty:netty-handler
+ARG NETTY_VERSION=4.1.135.Final
 RUN cd languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs \
     && rm -f netty-*.jar \
     && for module in netty-buffer netty-codec netty-codec-dns netty-common netty-handler \
@@ -52,7 +51,7 @@ RUN cd languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs \
 RUN mkdir -p /opt/fasttext \
     && wget -q "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin" -O /opt/fasttext/lid.176.bin
 
-FROM eclipse-temurin:21.0.10_7-jre-alpine@sha256:ad0cdd9782db550ca7dde6939a16fd850d04e683d37d3cff79d84a5848ba6a5a AS runtime
+FROM eclipse-temurin:21.0.11_10-jre-alpine@sha256:704db3c40204a44f471191446ddd9cda5d60dab40f0e15c6507b815ed897238b AS runtime
 
 RUN apk upgrade --no-cache \
     && apk add --no-cache fasttext \
