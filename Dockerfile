@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.11_10-jdk-alpine@sha256:4fb80de7aeb277ad949cfbe89b4f504e50bb34c57fd908c5825236473d71e986 AS builder
+FROM eclipse-temurin:21.0.11_10-jdk-alpine@sha256:1ff763083f2993d57d0bf374ab10bb3e2cb873af6c13a04458ebbd3e0337dc76 AS builder
 
 ARG LT_VERSION=6.8
 ARG MAVEN_VERSION=3.9.16
