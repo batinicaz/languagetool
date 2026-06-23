@@ -51,7 +51,7 @@ RUN cd languagetool-standalone/target/LanguageTool-*/LanguageTool-*/libs \
 RUN mkdir -p /opt/fasttext \
     && wget -q "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin" -O /opt/fasttext/lid.176.bin
 
-FROM eclipse-temurin:21.0.11_10-jre-alpine@sha256:704db3c40204a44f471191446ddd9cda5d60dab40f0e15c6507b815ed897238b AS runtime
+FROM eclipse-temurin:21.0.11_10-jre-alpine@sha256:3f08b13888f595cc49edabea7250ba69499ba25602b267da591720769400e08c AS runtime
 
 RUN apk upgrade --no-cache \
     && apk add --no-cache fasttext \
