@@ -5,7 +5,7 @@ ARG MAVEN_VERSION=3.9.16
 # renovate: datasource=maven depName=ch.qos.logback:logback-classic
 ARG LOGBACK_VERSION=1.5.34
 # renovate: datasource=maven depName=org.apache.opennlp:opennlp-tools
-ARG OPENNLP_VERSION=2.5.9
+ARG OPENNLP_VERSION=2.5.10
 RUN apk add --no-cache curl git patch xmlstarlet
 
 RUN wget -q "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -O /tmp/maven.tar.gz \
